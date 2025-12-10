@@ -6,7 +6,7 @@ import config from './config'
 function App() {
   console.log("App mounted ✅")
   const [messages, setMessages] = useState([
-    { id: 1, text: "Hello! How can I help you today?", sender: 'bot' }
+    { id: 1, text: "Cześć! W czym mogę Ci dzisiaj doradzić?", sender: 'bot' }
   ])
   const [inputText, setInputText] = useState('')
   const [isLoading, setIsLoading] = useState(false)
@@ -50,7 +50,7 @@ function App() {
 
       const errorMessage = {
         id: Date.now() + 1,
-        text: `Sorry, I'm having troubles with server (${config.API_BASE_URL}) connection: ${error.message} `,
+        text: `Nie można połączyć się z serwerem (${config.API_BASE_URL}): ${error.message} `,
         sender: 'bot',
         isError: true
       }
@@ -138,7 +138,7 @@ function App() {
               value={inputText}
               onChange={(e) => setInputText(e.target.value)}
               onKeyDown={handleKeyPress}
-              placeholder="Type your message..."
+              placeholder="Napisz wiadomość..."
               className="flex-1 border border-gray-300 rounded-lg px-3 py-2 resize-none 
                 text-gray-900 placeholder-gray-400 bg-white
                 shadow-sm focus:shadow-md
