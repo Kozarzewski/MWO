@@ -1,8 +1,10 @@
 import { useState, useRef, useEffect } from 'react'
 import { Send, User, Bot } from 'lucide-react'
 import { chatApi } from './services/chatApi'
+import config from './config'
 
 function App() {
+  console.log("App mounted ✅")
   const [messages, setMessages] = useState([
     { id: 1, text: "Hello! How can I help you today?", sender: 'bot' }
   ])
@@ -20,10 +22,11 @@ function App() {
 
   const handleSend = async () => {
     if (!inputText.trim() || isLoading) return
+    console.log("Sending message:", inputText)
 
-    const userMessage = { 
-      id: Date.now(), 
-      text: inputText, 
+    const userMessage = {
+      id: Date.now(),
+      text: inputText,
       sender: 'user',
       timestamp: new Date().toISOString()
     }
@@ -33,21 +36,21 @@ function App() {
 
     try {
       const data = await chatApi.sendMessage(inputText, messages)
-      
-      const botMessage = { 
-        id: Date.now() + 1, 
+
+      const botMessage = {
+        id: Date.now() + 1,
         text: data.reply,
         sender: 'bot',
         timestamp: new Date().toISOString()
       }
       setMessages(prev => [...prev, botMessage])
-      
+
     } catch (error) {
       console.error('Failed to send message:', error)
-      
-      const errorMessage = { 
-        id: Date.now() + 1, 
-        text: "Sorry, I'm having trouble connecting to the server. Please make sure your backend is running on localhost:8080", 
+
+      const errorMessage = {
+        id: Date.now() + 1,
+        text: `Sorry, I'm having troubles with server (${config.API_BASE_URL}) connection: ${error.message} `,
         sender: 'bot',
         isError: true
       }
@@ -65,9 +68,9 @@ function App() {
   }
 
   return (
-    <div className="flex flex-col h-screen bg-gray-50">
+    <div className="flex flex-col min-h-screen bg-gradient-to-br from-gray-100 to-gray-200 text-gray-900">
       {/* Header */}
-      <div className="bg-white border-b border-gray-200 px-4 py-3 shadow-sm">
+      <div className="bg-white/80 backdrop-blur border-b border-gray-200 px-4 py-3 shadow-md">
         <div className="flex items-center gap-3">
           <div className="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center">
             <Bot className="w-5 h-5 text-white" />
@@ -88,9 +91,8 @@ function App() {
               className={`flex gap-3 ${message.sender === 'user' ? 'flex-row-reverse' : ''}`}
             >
               {/* Avatar */}
-              <div className={`flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center ${
-                message.sender === 'user' ? 'bg-blue-600' : 'bg-gray-600'
-              }`}>
+              <div className={`shrink-0 w-8 h-8 rounded-full flex items-center justify-center ${message.sender === 'user' ? 'bg-blue-600' : 'bg-gray-600'
+                }`}>
                 {message.sender === 'user' ? (
                   <User className="w-4 h-4 text-white" />
                 ) : (
@@ -99,28 +101,27 @@ function App() {
               </div>
 
               {/* Message Bubble */}
-              <div className={`max-w-[70%] rounded-2xl px-4 py-2 ${
-                message.sender === 'user' 
-                  ? 'bg-blue-600 text-white rounded-br-none' 
-                  : message.isError
-                  ? 'bg-red-100 border border-red-300 text-red-800 rounded-bl-none' 
+              <div className={`max-w-[70%] rounded-2xl px-4 py-2 ${message.sender === 'user'
+                ? 'bg-blue-600 text-white rounded-br-none'
+                : message.isError
+                  ? 'bg-red-100 border border-red-300 text-red-800 rounded-bl-none'
                   : 'bg-white border border-gray-200 rounded-bl-none shadow-sm'
-              }`}>
+                }`}>
                 <p className="text-sm whitespace-pre-wrap">{message.text}</p>
               </div>
             </div>
           ))}
-          
+
           {isLoading && (
             <div className="flex gap-3">
-              <div className="flex-shrink-0 w-8 h-8 rounded-full bg-gray-600 flex items-center justify-center">
+              <div className="shrink-0 w-8 h-8 rounded-full bg-gray-600 flex items-center justify-center">
                 <Bot className="w-4 h-4 text-white" />
               </div>
-              <div className="bg-white border border-gray-200 rounded-2xl rounded-bl-none px-4 py-2 shadow-sm">
+              <div className="bg-white border border-gray-200 rounded-bl-none shadow-md">
                 <div className="flex space-x-1">
-                  <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce"></div>
-                  <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '0.1s' }}></div>
-                  <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
+                  <div className="w-2 h-2 bg-gray-400 rounded-full animate-pulse"></div>
+                  <div className="w-2 h-2 bg-gray-400 rounded-full animate-pulse" style={{ animationDelay: '0.1s' }}></div>
+                  <div className="w-2 h-2 bg-gray-400 rounded-full animate-pulse" style={{ animationDelay: '0.2s' }}></div>
                 </div>
               </div>
             </div>
@@ -136,16 +137,18 @@ function App() {
             <textarea
               value={inputText}
               onChange={(e) => setInputText(e.target.value)}
-              onKeyPress={handleKeyPress}
+              onKeyDown={handleKeyPress}
               placeholder="Type your message..."
-              className="flex-1 border border-gray-300 rounded-lg px-3 py-2 resize-none focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              className="flex-1 border border-gray-300 rounded-lg px-3 py-2 resize-none 
+                text-gray-900 placeholder-gray-400 bg-white
+                shadow-sm focus:shadow-md
+                focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
               rows="1"
-              style={{ minHeight: '40px', maxHeight: '120px' }}
             />
             <button
               onClick={handleSend}
               disabled={!inputText.trim() || isLoading}
-              className="bg-blue-600 text-white rounded-lg w-10 h-10 flex items-center justify-center hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:bg-gray-400 disabled:cursor-not-allowed"
+              className="bg-blue-600 text-white rounded-br-none w-10 h-10 shrink-0 flex items-center justify-center hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:bg-gray-400 disabled:cursor-not-allowed"
             >
               <Send className="w-4 h-4" />
             </button>

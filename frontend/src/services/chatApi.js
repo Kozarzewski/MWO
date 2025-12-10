@@ -1,5 +1,6 @@
-// API configuration
-const API_BASE_URL = 'http://localhost:8080'
+import config from "../config";
+
+console.log("API BASE URL:", config.API_BASE_URL)
 
 // Generic API call function
 async function apiCall(endpoint, options = {}) {
@@ -9,20 +10,24 @@ async function apiCall(endpoint, options = {}) {
     },
   }
 
-  try {
-    const response = await fetch(`${API_BASE_URL}${endpoint}`, {
-      ...defaultOptions,
-      ...options,
-    })
+  console.log("Calling endpoint:", endpoint)
+  const response = await fetch(`${config.API_BASE_URL}${endpoint}`, {
+    ...defaultOptions,
+    ...options,
+  })
 
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`)
-    }
+  const contentType = response.headers.get("content-type")
 
+  if (!response.ok) {
+    const errorText = await response.text()
+    console.error("API ERROR:", errorText)
+    throw new Error(errorText)
+  }
+
+  if (contentType && contentType.includes("application/json")) {
     return await response.json()
-  } catch (error) {
-    console.error('API call failed:', error)
-    throw error
+  } else {
+    return await response.text()
   }
 }
 
@@ -37,13 +42,5 @@ export const chatApi = {
       })
     })
   },
-
-  // Add other API calls here as needed
-  getHistory: async () => {
-    return apiCall('/history')
-  },
-
-  clearHistory: async () => {
-    return apiCall('/history', { method: 'DELETE' })
-  }
 }
+

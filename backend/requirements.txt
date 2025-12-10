@@ -9,6 +9,7 @@ fastapi==0.121.1
 greenlet==3.2.4
 h11==0.16.0
 idna==3.11
+openai==2.9.0
 pydantic==2.12.4
 pydantic_core==2.41.5
 requests==2.32.5
