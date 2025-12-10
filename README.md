@@ -8,10 +8,11 @@ Tematem projektu jest stworzenie strony internetowej pozwalającej na komunikacj
   
 W celu stworzenia środowiska dla backendu wykonać w folderze backend:  
 1.  python -m venv venv  
-2.  source venv/bin/activate  # lub venv\Scripts\activate (Windows)  
-3.  uvicorn app.main:app --reload --host 127.0.0.1 --port 8081  
+2.  source venv/bin/activate  # lub venv\Scripts\activate (Windows)
+3.  pip install -r requirements.txt
+4.  uvicorn app.main:app --reload --host 127.0.0.1 --port 8081  
     -  w przypadku problemów z portem należy go skorygować zarówno w komendzie uruchamiającej jak i kodzie frontendu - plik _frontend/src/config.js_  
-4.  utworzyć plik .env w folderze backend oraz wpisać w nim odpowiednie klucze AI ze strukturą (dane przykładowe):  
+5.  utworzyć plik .env w folderze backend oraz wpisać w nim odpowiednie klucze AI ze strukturą (dane przykładowe):  
     -  OPENAI_API_KEY=sk-xxxxxxxxxxxxxxxx 
     -  OPENAI_MODEL=gpt-4o-mini  
   
