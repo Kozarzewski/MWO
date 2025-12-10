@@ -1,7 +1,7 @@
 Projekt stworzony w ramach kursu Metody Wytwarzania Oprogramowania prowadzonego na Politechnice Wrocławskiej w semestrze zimowym 2025/2026.  
 Autorzy projektu:  
-    Piotr Kozarzewski  
-    Dawid Nowak  
+-  Piotr Kozarzewski  
+-  Dawid Nowak  
   
 Celem projektu jest zaznajomienie się ze współczesnymi praktykami tworzenia oprogramowania oraz wdrożenie ich.  
 Tematem projektu jest stworzenie strony internetowej pozwalającej na komunikację z chatbotem doradzającym użytkownikowi w zakresie inwestowania.  
